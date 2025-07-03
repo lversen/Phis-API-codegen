@@ -189,8 +189,9 @@ class OpenAPISetup:
             return False
     
     def generate_client(self, method: str, spec_file: str, output_dir: str, 
-                       package_name: Optional[str] = None,
-                       config_file: Optional[str] = None) -> bool:
+                    package_name: Optional[str] = None,
+                    config_file: Optional[str] = None,
+                    skip_validation: bool = False) -> bool:
         """Generate Python client code"""
         print_info("Generating Python API client...")
         
@@ -240,6 +241,10 @@ class OpenAPISetup:
             '-o', output_dir
         ]
         
+        # Add skip validation flag if requested
+        if skip_validation:
+            cmd.append('--skip-validate-spec')
+        
         # Add optional parameters
         if package_name:
             cmd.extend(['--package-name', package_name])
@@ -269,10 +274,10 @@ class OpenAPISetup:
     def create_config_file(self, filename: str = "openapi-config.json") -> bool:
         """Create sample configuration file"""
         config = {
-            "packageName": "my_api_client",
-            "projectName": "my-api-client",
-            "packageVersion": "1.0.0",
-            "packageUrl": "https://github.com/yourusername/my-api-client",
+            "packageName": "opensilex_python_client",
+            "projectName": "phis",
+            "packageVersion": "1.4.7",
+            "packageUrl": "https://github.com/lversen/Phis-API-codegen",
             "libraryPackage": "urllib3",
             "generateSourceCodeOnly": False,
             "hideGenerationTimestamp": True,
@@ -307,6 +312,9 @@ Examples:
   
   # Use Docker (no Java required)
   python openapi-setup.py -m docker -i ./specs/api.yaml -o ./python-client
+  
+  # Skip validation for problematic specs
+  python openapi-setup.py -i api.json --skip-validation
         """
     )
     
@@ -335,6 +343,9 @@ Examples:
     parser.add_argument('--create-config',
                        action='store_true',
                        help='Create sample configuration file')
+    parser.add_argument('--skip-validation',
+                       action='store_true',
+                       help='Skip OpenAPI specification validation')
     
     args = parser.parse_args()
     
@@ -380,7 +391,7 @@ Examples:
             sys.exit(1)
         
         if not setup.generate_client(args.method, args.input, args.output, 
-                                   args.package, args.config):
+                                   args.package, args.config, args.skip_validation):
             sys.exit(1)
         
         # Show next steps
