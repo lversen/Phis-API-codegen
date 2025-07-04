@@ -47,7 +47,7 @@ class SSHConfigParser:
                     hostname = selected_host.get('hostname')
                     if hostname:
                         print(f"Selected host: {selected_host_name} (IP: {hostname})")
-                        return hostname
+                        return hostname + ":28081"
                     else:
                         print(f"Host '{selected_host_name}' does not have a 'Hostname' defined.")
                 else:
