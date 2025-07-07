@@ -125,7 +125,7 @@ def main():
     
     # 1. Get the authenticated API client using interactive host selection.
     #    Set to False to use the default API_HOST from the config section.
-    api_client = authenticate_and_get_client(interactive_host_selection=False)
+    api_client = authenticate_and_get_client(interactive_host_selection=True)
     print("API Client created successfully." if api_client else "Failed to create API Client.")
     print("\n--- Example Finished ---")
 
